@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<robot name="my_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:include filename="$(find my_robot_description)/urdf/chassis/base.xacro"/>
+    <xacro:include filename="$(find my_robot_description)/urdf/chassis/wheel.xacro"/>
+    <xacro:include filename="$(find my_robot_description)/urdf/chassis/caster.xacro"/>
+    <xacro:include filename="$(find my_robot_description)/urdf/sensors/velodyne.xacro"/>
+    
+    <xacro:include filename="$(find my_robot_description)/urdf/sensors/imu.xacro"/>
+
+    <xacro:robot_base/>
+    <xacro:diff_wheel prefix="left" parent="base_link" x_reflect="-1" y_reflect="1"/>
+    <xacro:diff_wheel prefix="right" parent="base_link" x_reflect="-1" y_reflect="-1"/>
+    <xacro:caster_wheel prefix="front" parent="base_link" x_offset="0.15"/>
+    <xacro:sensor_velodyne parent="base_link" x="0.15" y="0" z="0.08"/>
+
+    <xacro:sensor_imu parent="base_link" x="0.0" y="0.0" z="0.05"/>
+    <gazebo>
+        <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
+            <updateRate>50.0</updateRate>
+            <leftJoint>left_wheel_joint</leftJoint>
+            <rightJoint>right_wheel_joint</rightJoint>
+            <wheelSeparation>0.24</wheelSeparation>
+            <wheelDiameter>0.3</wheelDiameter>
+            <commandTopic>cmd_vel</commandTopic>
+            <odometryTopic>odom</odometryTopic>
+            <odometryFrame>odom</odometryFrame>
+            <robotBaseFrame>base_footprint</robotBaseFrame>
+            <publishWheelTF>false</publishWheelTF>
+            <publishOdomTF>true</publishOdomTF>
+            <publishWheelJointState>true</publishWheelJointState>
+            <wheelAcceleration>1.0</wheelAcceleration>
+            <wheelTorque>20</wheelTorque>
+        </plugin>
+    </gazebo>
+</robot>

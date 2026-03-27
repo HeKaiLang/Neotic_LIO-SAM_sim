@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    
+    <xacro:macro name="robot_base">
+        
+        <link name="base_footprint"/>
+
+        <link name="base_link">
+            <visual>
+                <geometry>
+                    <box size="0.4 0.2 0.1"/>
+                </geometry>
+                <material name="blue">
+                    <color rgba="0.0 0.5 0.8 1.0 0.5"/>
+                </material>
+            </visual>
+            <collision>
+                <geometry>
+                    <box size="0.4 0.2 0.1"/>
+                </geometry>
+            </collision>
+            <inertial>
+                <mass value="1.0"/>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+            </inertial>
+        </link>
+
+        <joint name="base_joint" type="fixed">
+            <parent link="base_footprint"/>
+            <child link="base_link"/>
+            <origin xyz="0 0 0.15" rpy="0 0 0"/>
+        </joint>
+
+        <gazebo reference="base_link">
+            <material>Gazebo/Blue</material>
+        </gazebo>
+
+    </xacro:macro>
+</robot>

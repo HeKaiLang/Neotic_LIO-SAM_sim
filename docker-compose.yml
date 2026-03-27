@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  lio_sam:
+    image: noetic_lio_sim_gazebo_env
+    container_name: lio_sam_sim
+    
+    # 对应 --net=host，ROS 1 多节点通信必备
+    network_mode: "host"
+    
+    # 增加特权模式，防止一些权限导致的驱动问题
+    privileged: true
+    
+    # 对应 -it，保证容器运行并可交互
+    stdin_open: true
+    tty: true
+
+    environment:
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+      # 【新增】显卡穿透环境变量，让 Gazebo 认识宿主机的显卡
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=graphics,compute,utility
+    
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      # 【新增】WSLg 的挂载点，进一步保证 RViz 和 Gazebo 的显示流畅度
+      - /mnt/wslg:/mnt/wslg
+      # 【极其重要】取消了注释！用来存放我们接下来写的 xacro 和 launch 文件
+      - /home/calon/liosam_project/datasets:/home/calon/data
+      - /home/calon/noetic_lio_gazebo/catkin_ws:/home/calon/catkin_ws:rw
+
+    # 【新增】Docker Compose 的 GPU 调用申明 (对应 docker run 的 --gpus all)
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]

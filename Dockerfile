@@ -70,6 +70,7 @@ RUN sudo apt-get update && \
     sudo apt-get install -y --no-install-recommends \
     ros-noetic-velodyne-description \
     ros-noetic-velodyne-simulator \
+    ros-noetic-pcl-ros ros-noetic-octomap-server ros-noetic-map-server \
     && sudo rm -rf /var/lib/apt/lists/*
 
 # 默认进入你用于日常开发的 catkin_ws
